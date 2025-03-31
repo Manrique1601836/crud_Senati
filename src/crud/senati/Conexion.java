@@ -5,7 +5,7 @@ import java.sql.*;
 
 public class Conexion {
     public Connection conectar(){
-    String url = "jdbc:mysql://localhost:3306/mysql?zeroDateTimeBehavior=CONVERT_TO_NULL";
+    String url = "jdbc:mysql://localhost:3306/senati?zeroDateTimeBehavior=CONVERT_TO_NULL";
     String user = "root";
     String password = "";
     Connection cn = null;
