@@ -4,7 +4,9 @@
  */
 package crud.senati;
 import java.sql.*;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 /**
  *
@@ -15,7 +17,7 @@ public class Usuarios extends javax.swing.JFrame {
     
     public Usuarios() {
         initComponents();
-        cargarUsuarios();
+       cargarUsuarios();
     }
     
     public void cargarUsuarios(){
@@ -24,8 +26,7 @@ public class Usuarios extends javax.swing.JFrame {
         String query = "select * from usuario";
         
         try {
-            Statement st = null;
-            st = cn.conectar().createStatement();
+            Statement st = cn.conectar().createStatement();
             ResultSet rs = st.executeQuery(query);
             
             if (rs != null) {
@@ -164,14 +165,51 @@ public class Usuarios extends javax.swing.JFrame {
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         // TODO add your handling code here:
         
+        AgregarUsuario formAdd = new AgregarUsuario();
+        formAdd.setVisible(true);
+        
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         // TODO add your handling code here:
+        TableModel modelo = tblUsuario.getModel();
+        
+        String id = modelo.getValueAt(tblUsuario.getSelectedRow(), 0 ).toString();
+        String name = modelo.getValueAt(tblUsuario.getSelectedRow(),1).toString();
+        String lastname = modelo.getValueAt(tblUsuario.getSelectedRow(),2).toString();
+        
+        ActualizarUsuario editor = new ActualizarUsuario(id, name, lastname);
+        editor.setVisible(true);
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         // TODO add your handling code here:
+        if(tblUsuario.getSelectedRow() > -1){
+            int option = JOptionPane.showConfirmDialog(null,"¿Estas seguro?","Eliminar",JOptionPane.OK_OPTION,JOptionPane.OK_OPTION);
+            
+            if(option == 0){
+                TableModel modelo = tblUsuario.getModel();
+                Conexion cn = new Conexion();
+                String id = modelo.getValueAt(tblUsuario.getSelectedRow(), 0 ).toString();
+                String query = "DELETE FROM USUARIO WHERE id = ?";
+                try{
+                    PreparedStatement ps = cn.conectar().prepareStatement(query);
+                    ps.setInt(1,Integer.parseInt(id));
+                    ps.execute();
+                    dispose();
+                    Usuarios usu = new Usuarios();
+                    usu.setVisible(true);
+                    /*EliminarUsuario delete = new EliminarUsuario();
+                    delete.setVisible(true);*/
+                }catch(SQLException e){
+                    System.out.println(e);
+                }
+            }else{
+            JOptionPane.showMessageDialog(null,"Selecciona");
+            }
+        }
+        
+ 
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     /**
